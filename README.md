@@ -53,7 +53,7 @@ dotnet run <path_to_take_file> <path_to_csv_file>
 
 This created my binary (with all the debug symbols in it, but hey, this is a quick and dirty project), which you can download here too.
 
-# How do I use this exernally?
+# How do I use this externally?
 
 Super simple: you assemble the string you want to execute first, and you use your own environment's method to call it. For instance in Matlab, will will be something like this:
 ```
