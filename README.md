@@ -32,9 +32,9 @@ First of all, there are very few sanity checks and error management built in, so
 
 I added a return value as well, which helps when calling this external executable from my environment.
 
-Interestingly the [NMotive API](https://v22.wiki.optitrack.com/index.php?title=Motive_Batch_Processor#Class_Reference)'s documentation is bundled with Motive as a .chm file, and it claims to support C#, Visual Basic, C++, and F#. The Wiki I linked above uses C# and IronPython. Based on this, the common denominator is C#, so I wrote the code in this language.
+Interestingly, instead of it being shared in the Wiki, the [NMotive API](https://v22.wiki.optitrack.com/index.php?title=Motive_Batch_Processor#Class_Reference)'s documentation is bundled with Motive as a .chm file, and it claims to support C#, Visual Basic, C++, and F#. The Wiki I linked above uses C# and IronPython. Based on this, the common denominator is C#, so I wrote the code in this language.
 
-While adding external libraries to a C# project is relatively easy, it seems that the NMotive API needs the entire Qt framework as well. I guess the developers wanted people to develop shiny GUI applications.
+While adding external libraries to a C# project is relatively easy, it seems that the NMotive API needs the entire Qt framework as well: more than 20 DLL files were required just to run this tiny piece of code. I guess the developers wanted people to develop shiny GUI applications that dazzles users.
 
 The code itself does the following things:
 
@@ -42,7 +42,7 @@ The code itself does the following things:
 * Load the take file
 * Initialise an instance `CSVExporter` to export rigid body data, and converts units to millimeters, as opposed to Move's default meter units.
 * Executes the export operation to the .csv file
-
+I tried to add some error messages so hopefully I will have a bit of a clue on why something failed in the future.
 
 ## Compiling
 
