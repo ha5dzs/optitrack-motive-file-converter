@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>OptiTrack_NMotive_Converter</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+      <Reference Include="NMotive">
+        <HintPath>NMotive API\NMotive.dll</HintPath>
+      </Reference>
+  </ItemGroup>
+</Project>
