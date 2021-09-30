@@ -55,7 +55,7 @@ This created my binary (with all the debug symbols in it, but hey, this is a qui
 
 # How do I use this externally?
 
-Super simple: you assemble the string you want to execute first, and you use your own environment's method to call it. For instance in Matlab, will will be something like this:
+Super simple: you assemble the string you want to execute first, and you use your own environment's method to call it. For instance in Matlab, will be something like this:
 ```
 system(Y:/converter/converter.exe "D:/my_data/take05.tak" "D:/my_data/take05.csv");
 ```
