@@ -1,6 +1,6 @@
 # OptiTrack Motive file converter
 
-### (For the tl;dr types, download the executable [here](https://github.com/ha5dzs/optitrack-motive-file-converter/releases/tag/1.0).)
+**(For the tl;dr types, download the executable [here](https://github.com/ha5dzs/optitrack-motive-file-converter/releases/tag/1.0).)**
 
 Sometimes in my experiments I don't just need to stream OptiTrack data [using the NatNet SDK](https://optitrack.com/software/natnet-sdk/), but also I need access to the entire trial, which I recorded as *take* files.
 
@@ -8,13 +8,13 @@ Unfortunately these files contain binary data, and I have not been able to find 
 
 Motive allows you to manually export these files as .csv, but the tool is either part in Motive, or you can use the [batch processor](https://v23.wiki.optitrack.com/index.php?title=Motive_Batch_Processor) to get a bunch of files processed.
 
-None of these solutions allowed me to do the conversion programmatically.
+Neither of these solutions allowed me to do the conversion programmatically.
 
 Luckily, the source code is included for the batch processor, and mere mortals like me are 'welcome to use as a starting point' for a custom application.
 
 So I did exactly that.
 
-# How do I use the converter?
+## How do I use the converter?
 
 This code is written to be called programmatically, and I made it as simple as possible:
 ```
@@ -26,7 +26,7 @@ This code creates the .csv file at `path_to_csv_file`, by reading `path_to_take_
 
 The paths should be absolute. You can run this tool on your computer, and you don't need a licensed copy of Motive to do this.
 
-# What's in the code?
+## What's in the code?
 
 First of all, there are very few sanity checks and error management built in, so beware of unhandled exceptions and other goodies when not exactly giving the correct input arguments.
 
@@ -40,23 +40,26 @@ The code itself does the following things:
 
 * Basic sanity checks on input arguments and prints usage
 * Load the take file
-* Initialise an instance `CSVExporter` to export rigid body data, and converts units to millimeters, as opposed to Move's default meter units.
+* Initialise an instance of `CSVExporter` to export rigid body data, and converts units to millimeters, as opposed to Move's default meter units.
 * Executes the export operation to the .csv file
-I tried to add some error messages so hopefully I will have a bit of a clue on why something failed in the future.
+I tried to add some error messages, so hopefully I will have a bit of a clue on why something failed in the future.
 
-## Compiling
+### Compiling
 
 I used [Visual Studio Code](https://code.visualstudio.com/Download), downloaded a recent .NET framework, and ran the code with
+
 ```
 dotnet run <path_to_take_file> <path_to_csv_file>
 ```
 
 This created my binary (with all the debug symbols in it, but hey, this is a quick and dirty project), which you can download here too.
 
-# How do I use this externally?
+## How do I use this externally?
 
 Super simple: you assemble the string you want to execute first, and you use your own environment's method to call it. For instance in Matlab, will be something like this:
+
 ```
 system(Y:/converter/converter.exe "D:/my_data/take05.tak" "D:/my_data/take05.csv");
 ```
+
 Yes, Matlab is OK with forward slashes in the path, instead of backslashes. Also, note that the input arguments are in quotation marks, to cope with spaces and special characters in the file path.
