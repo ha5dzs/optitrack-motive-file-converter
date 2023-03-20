@@ -19,7 +19,7 @@ namespace OptiTrack_NMotive_Converter
         static int Main(string[] args)
         {
             // This is a simple tool, so I just display the usage when something is not OK.
-            if(args.Length != 2)
+            if(args.Length < 2 || args.Length > 3 )
             {
                 print_usage();
                 return -1;
@@ -29,6 +29,44 @@ namespace OptiTrack_NMotive_Converter
             //Console.WriteLine("Input file name is: {0}", take_file_name);
             var csv_file_name = args[1];
             //Console.WriteLine("Output file name is: {0}", csv_file_name);
+
+            Rotation rotation_format = 0;
+
+            if(args.Length == 3)
+            {
+                // If we got here, update the format code with the third input argument
+                switch(Convert.ToInt32(args[2]))
+                {
+                    // I have to do it this way, because I can't seem to cast the input argument string into NMotive.Rotation
+                    // Steve Ballmer will probably know why.
+
+                    case 1:
+                        rotation_format = (NMotive.Rotation)1;
+                        break;
+
+                    case 2:
+                        rotation_format = (NMotive.Rotation)2;
+                        break;
+                    case 3:
+                        rotation_format = (NMotive.Rotation)3;
+                        break;
+                    case 4:
+                        rotation_format = (NMotive.Rotation)4;
+                        break;
+                    case 5:
+                        rotation_format = (NMotive.Rotation)5;
+                        break;
+                    case 6:
+                        rotation_format = (NMotive.Rotation)6;
+                        break;
+
+                    // Any other weird value will be interpreted as 0.
+                    default:
+                        rotation_format = 0;
+                        break;
+                }
+            }
+
 
             // No sanity check on the input arguments. Paths to files should be either absolute, or relative to the executable.
             // I know it's like giving a hand grenade to a monkey, but since this thing is to be called programmatically, I can live with it.
@@ -71,6 +109,7 @@ namespace OptiTrack_NMotive_Converter
             csv_exporter.WriteMarkers = false; // Add marker data to the csv file.
             csv_exporter.WriteRigidBodies = true; // We use a ton of rigid bodies, we need these.
             csv_exporter.WriteRigidBodyMarkers = false; // Just in case.
+            csv_exporter.RotationType = rotation_format; // As specified by the input argument.
 
 
             // Now do the actual exporting
@@ -93,8 +132,17 @@ namespace OptiTrack_NMotive_Converter
         {
             // Print basic usage.
             Console.WriteLine("Usage:");
-            Console.WriteLine("converter <input TAK file path> <output CSV file path>");
-            Console.WriteLine("The paths can be absolute or relative to the executable file. That's pretty much it.");
+            Console.WriteLine("converter <input TAK file path> <output CSV file path> <OPTIONAL: rotation_format>");
+            Console.WriteLine("The paths can be absolute or relative to the executable file.");
+            Console.WriteLine("WARNING: Rotation format is non-obvious, please specify the format as follows:");
+            Console.WriteLine("Number\tFormat and rotation order");
+            Console.WriteLine("0\tQuaternion, wxyz (wijk)");
+            Console.WriteLine("1\tEuler, XYZ");
+            Console.WriteLine("2\tEuler, XZY");
+            Console.WriteLine("3\tEuler, YXZ");
+            Console.WriteLine("4\tEuler, YZX");
+            Console.WriteLine("5\tEuler, ZXY");
+            Console.WriteLine("6\tEuler, ZYX");
         }
     }
 }

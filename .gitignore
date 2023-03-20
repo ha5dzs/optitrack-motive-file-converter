@@ -1,0 +1,6 @@
+# Stuff to ignore
+.vscode
+bin
+obj
+test.tak
+test.csv
