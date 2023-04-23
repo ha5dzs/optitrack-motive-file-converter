@@ -10,4 +10,10 @@
         <HintPath>NMotive API\NMotive.dll</HintPath>
       </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <ContentWithTargetPath Include="NMotive API\platforms\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>platforms\%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>
+    </ContentWithTargetPath>
+  </ItemGroup>
 </Project>
