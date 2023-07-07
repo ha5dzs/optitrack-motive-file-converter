@@ -6,6 +6,8 @@ Sometimes in my experiments I don't just need to stream OptiTrack data [using th
 
 Unfortunately these files contain binary data, and I have not been able to find a file format description online. I need them in an easily accessible file format, so I can do statistics on the motion tracker data later on.
 
+**IMPORTANT: If you are using Motive 3, solve the rigid bodies in your recordings before using this tool. Motive 2 does this by default, but Motive 3 doesn't.**
+
 Motive allows you to manually export these files as .csv, but the tool is either part in Motive, or you can use the [batch processor](https://v23.wiki.optitrack.com/index.php?title=Motive_Batch_Processor) to get a bunch of files processed.
 
 Neither of these solutions allowed me to do the conversion programmatically.
