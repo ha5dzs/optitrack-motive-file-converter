@@ -4,7 +4,7 @@ using NMotive;
 
 namespace OptiTrack_NMotive_Converter
 {
-    class converter
+    class Converter
     {
         /*
          * This is here to suppress this warning:
@@ -97,17 +97,18 @@ namespace OptiTrack_NMotive_Converter
             // Reconstruct and auto-label. Motive 3 has some quick rigid body solver, which doesn't always work with complicated objects.
             Trajectorizer trajectoriser = new Trajectorizer(); // Input argument is a progress bar, but we won't care about this.
 
+            /* I am trying without this file
             // I don't know why, but the example reads in the reconstruction settings.
             string reconstruction_settings_file = "ReconstructionSettings.motive";
             NMotive.Result import_result = Settings.ImportMotiveProfile( reconstruction_settings_file );
 
             if ( !import_result.Success )
             {
-                Console.WriteLine("Couldn''t import the reconstruction settings file {0}", reconstruction_settings_file);
+                Console.WriteLine("Couldn't import the reconstruction settings file {0}", reconstruction_settings_file);
                 return -1;
             }
 
-
+            */
 
 
             trajectoriser.Process( input_take, TrajectorizerOption.ReconstructAndAutoLabel ); // Do the job
