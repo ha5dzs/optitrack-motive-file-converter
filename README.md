@@ -14,6 +14,8 @@ The only problem with this is that this process is really slow, Motive Batch Pro
 
 So, this new version of code has been brought up-to-date: It now requies .NET framework 7.0, and does all the additional steps (Reconstruct, Auto-label, Solve) before exporting to CSV.
 
+Additionally, it seems that a lot of binaries have been updated, and `NMotive.dll`` didn't load due to some undocumented dependencies. So I ended up senselessly copying everything in the project until it worked.
+
 ## Why
 
 Motive allows you to manually export these files as .csv, but the tool is either part in Motive, or you can use the [batch processor](https://v23.wiki.optitrack.com/index.php?title=Motive_Batch_Processor) to get a bunch of files processed.
@@ -60,6 +62,10 @@ The code itself does the following things:
 
 * Basic sanity checks on input arguments and prints usage
 * Load the take file
+* Process: Reconstruct and auto-label with default settings
+* Save
+* Solve
+* Save (again)
 * Initialise an instance of `CSVExporter` to export rigid body data, and converts units to millimeters, as opposed to Move's default meter units.
 * Executes the export operation to the .csv file
 I tried to add some error messages, so hopefully I will have a bit of a clue on why something failed in the future.
@@ -71,8 +77,6 @@ I used [Visual Studio Code](https://code.visualstudio.com/Download), downloaded 
 ```
 dotnet run <path_to_take_file> <path_to_csv_file>
 ```
-
-This created my binary (with all the debug symbols in it, but hey, this is a quick and dirty project), which you can download here too. When compiling and running it for the first time, it will need the Windows platform DLL file in the `bin` directory. Make sure you copy `NMotive API\platforms\qwindows.dll` to `bin/Debug\netX.Y\platforms\qwindows.dll`. The `netX.Y` is the version number of your .NET package you installed on your system.
 
 ## How do I use this externally?
 
@@ -90,3 +94,9 @@ system(Y:/converter/converter.exe "D:/my_data/take05.tak" "D:/my_data/take05.csv
 ```
 
 Yes, Matlab is OK with forward slashes in the path, instead of backslashes. Also, note that the input arguments are in quotation marks, to cope with spaces and special characters in the file path.
+
+## Enhancing the ~~brutality~~ performance
+
+There is an included Matlab file. You just need to specify where the executable is, which directory the `.tak` files are, and which directory the `.csv` files should go. Then it starts a parallel pool, and executes the binary.
+
+Processing 180 trials in Motive takes about 3 hours. Doing the same processing steps with this code takes about 4 minutes on the decent workstation in the lab.
