@@ -1,5 +1,6 @@
 # Stuff to ignore
 .vscode
+*.sln
 bin
 obj
 test.tak

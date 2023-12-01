@@ -6,11 +6,19 @@ Sometimes in my experiments I don't just need to stream OptiTrack data [using th
 
 Unfortunately these files contain binary data, and I have not been able to find a file format description online. I need them in an easily accessible file format, so I can do statistics on the motion tracker data later on.
 
-**IMPORTANT: If you are using Motive 3, solve the rigid bodies in your recordings before using this tool. Motive 2 does this by default, but Motive 3 doesn't.**
+## Motive 3 differences
+
+With Motive 3, it seems that the rigid body data is not included by default. In research, we almost exclusively use rigid bodies, as we need to rely on virtual markers. In Motive terminology, we set the 'pivot' to a marker that doesn't exist on the rigid body during normal use. Presumably (as, in, this is all speculation), in order to increase performance, the rigid body solver is a quick and less accurate one for when handling the data. When there are multiple rigid bodies that are similar to each other, this algorithm gets easily confused. When the files are reconstructed, auto-labelled, and then solved, this problem disappears.
+
+The only problem with this is that this process is really slow, Motive Batch Processor requires a license, and it seems that is is single-core execution only.
+
+So, this new version of code has been brought up-to-date: It now requies .NET framework 7.0, and does all the additional steps (Reconstruct, Auto-label, Solve) before exporting to CSV.
+
+## Why
 
 Motive allows you to manually export these files as .csv, but the tool is either part in Motive, or you can use the [batch processor](https://v23.wiki.optitrack.com/index.php?title=Motive_Batch_Processor) to get a bunch of files processed.
 
-Neither of these solutions allowed me to do the conversion programmatically.
+Neither of these solutions allowed me to do the conversion programmatically, or allow me to use a separate computer that does not run Motive to process my data.
 
 Luckily, the source code is included for the batch processor, and mere mortals like me are 'welcome to use as a starting point' for a custom application.
 

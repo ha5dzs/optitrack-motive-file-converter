@@ -94,6 +94,30 @@ namespace OptiTrack_NMotive_Converter
 
             //Console.WriteLine("Loading done.");
 
+            // Reconstruct and auto-label. Motive 3 has some quick rigid body solver, which doesn't always work with complicated objects.
+            Trajectorizer trajectoriser = new Trajectorizer(); // Input argument is a progress bar, but we won't care about this.
+
+            // I don't know why, but the example reads in the reconstruction settings.
+            string reconstruction_settings_file = "ReconstructionSettings.motive";
+            NMotive.Result import_result = Settings.ImportMotiveProfile( reconstruction_settings_file );
+
+            if ( !import_result.Success )
+            {
+                Console.WriteLine("Couldn''t import the reconstruction settings file {0}", reconstruction_settings_file);
+                return -1;
+            }
+
+
+
+
+            trajectoriser.Process( input_take, TrajectorizerOption.ReconstructAndAutoLabel ); // Do the job
+            input_take.Save(); // Just in case.
+
+
+            // Solve
+            input_take.Solve();
+            input_take.Save();
+
 
             // This is our CSVExporter object, as per the API reference manual.
             var csv_exporter = new CSVExporter();
