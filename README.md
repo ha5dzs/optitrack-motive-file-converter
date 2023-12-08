@@ -66,7 +66,7 @@ The code itself does the following things:
 * Save
 * Solve
 * Save (again)
-* Initialise an instance of `CSVExporter` to export rigid body data, and converts units to millimeters, as opposed to Move's default meter units.
+* Initialise an instance of `CSVExporter` to export rigid body data, and converts units to millimeters, as opposed to Motive's default meter units.
 * Executes the export operation to the .csv file
 I tried to add some error messages, so hopefully I will have a bit of a clue on why something failed in the future.
 
