@@ -46,7 +46,7 @@ rotation_format  Format and rotation order
 
 The paths should be absolute. You can run this tool on your computer, and you don't need a licensed copy of Motive to do this.
 The exported CSV file will have 6 or 7 columns for each rigid body, with the number of lines corresponding to the number of frames recorded.
-The first 3 columns are the translation coordinates. The rest is the rotation.
+The last 3 columns are the translation coordinates. The rest is the rotation. You can tell, because the rotations are in radians, but the coordinates are in millimetres.
 
 ## What's in the code?
 
