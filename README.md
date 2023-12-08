@@ -14,7 +14,7 @@ The only problems with this are that this process is really slow, Motive Batch P
 
 So, this new version of code has been brought up-to-date: It now requies .NET framework 7.0, and does all the additional steps (Reconstruct, Auto-label, Solve) before exporting to CSV.
 
-Additionally, it seems that a lot of binaries have been updated, and `NMotive.dll`` didn't load due to some undocumented dependencies. So I ended up senselessly copying everything in the project until it worked.
+Additionally, it seems that a lot of binaries have been updated, and `NMotive.dll` didn't load due to some undocumented dependencies. So I ended up senselessly copying everything in the project until it worked.
 
 ## Why
 
