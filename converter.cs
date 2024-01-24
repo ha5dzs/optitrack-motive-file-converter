@@ -1,23 +1,126 @@
 ﻿using System;
 using System.IO;
 using NMotive;
+using System.Xml;
+using System.Xml.Serialization;
+using System.Diagnostics;
 
 namespace OptiTrack_NMotive_Converter
 {
     class Converter
     {
         /*
-         * This is here to suppress this warning:
-         * QWindowsContext: OleInitialize() failed:  "COM error 0xffffffff80010106 RPC_E_CHANGED_MODE (Unknown error 0x080010106)"
-         * Not sure why this happens, never did anything with Qt before, found this here:
-         * https://github.com/qmlnet/qmlnet-examples/issues/17
-         * Since I won't do anything with Qt GUIs in this code, I can afford not to care.
-         */
+        * This is here to suppress this warning:
+        * QWindowsContext: OleInitialize() failed:  "COM error 0xffffffff80010106 RPC_E_CHANGED_MODE (Unknown error 0x080010106)"
+        * Not sure why this happens, never did anything with Qt before, found this here:
+        * https://github.com/qmlnet/qmlnet-examples/issues/17
+        * Since I won't do anything with Qt GUIs in this code, I can afford not to care.
+        */
         [STAThread]
 
 
         static int Main(string[] args)
         {
+            /*
+             * Objects we need to play with
+             */
+
+            Trajectorizer trajectoriser = new Trajectorizer(); // This is for processing the .tak file
+            CSVExporter csv_exporter = new CSVExporter(); // This one creates the csv_file from the .tak file.
+            XmlDocument config_file = new XmlDocument(); // This is the object where I hold all the 'global' settings.
+
+            /*
+             * Check config files
+             */
+
+
+                /*
+                * Trajectoriser settings.
+                * Got this from: https://forums.naturalpoint.com/viewtopic.php?t=26411
+                *
+                * Unfortunately, we have no option, but to load it in from a file.
+                */
+
+
+            NMotive.Result import_result = Settings.ImportMotiveProfile( "ReconstructionSettings.motive" );
+
+            if ( !import_result.Success )
+            {
+                Console.WriteLine("Couldn't import the reconstruction settings file {0}", "ReconstructionSettings.motive");
+                return -1; // No point in continuing, if the reconstruction settings file couldn't be loaded.
+            }
+
+
+
+                /*
+                * CSVExporter settings.
+                * These are created manually here.
+                * If there is a problem with the csv exporter config file, this will create it with these defaults.
+                */
+
+            csv_exporter.RotationType = Rotation.QuaternionFormat; // Rotation is quaternion. More complicated, but less messy than Euler angles.
+            csv_exporter.Units = LengthUnits.Units_Millimeters; // We use mm in the lab.
+            csv_exporter.UseWorldSapceCoordinates = true; // This will matter when VR is used.
+            csv_exporter.WriteBoneMarkers = false; // We don't use skeletons here. Some people might do.
+            csv_exporter.WriteHeader = true; // Add header to the csv file. This is a bit of a headache because of the stuff inside it, but, meh.
+            csv_exporter.WriteMarkers = false; // We principally use rigid bodies only. Some people don't.
+            csv_exporter.WriteRigidBodies = true; // We use a ton of rigid bodies, we need these.
+            csv_exporter.WriteRigidBodyMarkers = false; // Just in case.
+
+            if(!File.Exists("CSVExporterSettings.motive"))
+            {
+                // If we got here, we need to export the CSV settings into an xml file
+                // 'inspired' by: https://stackoverflow.com/questions/4123590/serialize-an-object-to-xml
+                // ...and: https://stackoverflow.com/questions/4363886/how-to-add-a-line-break-when-using-xmlserializer
+
+                var XmlWriterSettings = new XmlWriterSettings() {Indent = true}; // Add intentation, so the file is human-readable
+                XmlSerializer csv_exporter_serialiser = new XmlSerializer(typeof(CSVExporter));
+                StringWriter string_writer = new StringWriter();
+
+                // Probably there are simpler ways of doing it. Developers, developers, developers.
+                using( var writer = XmlWriter.Create(string_writer, XmlWriterSettings))
+                {
+                    csv_exporter_serialiser.Serialize(writer, csv_exporter);
+                    Console.WriteLine("No CSV Exporter configuration file is found, creating a default one.");
+                    //Console.WriteLine(string_writer.ToString());
+                    string output_string = string_writer.ToString();
+                    File.WriteAllTextAsync("CSVExporterSettings.motive", output_string);
+                }
+
+
+            }
+            else
+            {
+                // We have a file, we read it, deserialise it, and assign it to csv_exporter.
+                //Console.WriteLine("CSV exporter config file found.");
+                try
+                {
+                    using (var reader = new StreamReader("CSVExporterSettings.motive"))
+                    {
+                        csv_exporter = (CSVExporter) new XmlSerializer(typeof(CSVExporter)).Deserialize(reader);
+                    }
+
+                }
+                catch(Exception e)
+                {
+                    // Might as well.
+                    Console.WriteLine("Reading the config file failed.\n The computer says: {0}", e.Message);
+                    Console.WriteLine("Try deleting CSVExporterSettings.motive, and starting configuring it again.");
+                    return -1; // If we use bad config file, no point in continuing
+
+                }
+
+                //Console.WriteLine("Loading the config file was successful.");
+
+
+            }
+
+
+            /*
+             * Basic sanity checks
+             * (nothing too fancy)
+             */
+
             // This is a simple tool, so I just display the usage when something is not OK.
             if(args.Length < 2 || args.Length > 3 )
             {
@@ -65,10 +168,12 @@ namespace OptiTrack_NMotive_Converter
                         rotation_format = 0;
                         break;
                 }
+                // Update the csv_exporter setting here, if we have an optional input argument:
+                csv_exporter.RotationType = rotation_format; // As specified by the input argument.
             }
 
 
-            // No sanity check on the input arguments. Paths to files should be either absolute, or relative to the executable.
+            // Some sanity check on the input arguments. Paths to files should be either absolute, or relative to the executable.
             // I know it's like giving a hand grenade to a monkey, but since this thing is to be called programmatically, I can live with it.
 
             // Load our take, and let the user know if the take failed to load
@@ -95,49 +200,18 @@ namespace OptiTrack_NMotive_Converter
             //Console.WriteLine("Loading done.");
 
             // Reconstruct and auto-label. Motive 3 has some quick rigid body solver, which doesn't always work with complicated objects.
-            Trajectorizer trajectoriser = new Trajectorizer(); // Input argument is a progress bar, but we won't care about this.
-
-            /* I am trying without this file
-            // I don't know why, but the example reads in the reconstruction settings.
-            string reconstruction_settings_file = "ReconstructionSettings.motive";
-            NMotive.Result import_result = Settings.ImportMotiveProfile( reconstruction_settings_file );
-
-            if ( !import_result.Success )
-            {
-                Console.WriteLine("Couldn't import the reconstruction settings file {0}", reconstruction_settings_file);
-                return -1;
-            }
-
-            */
 
 
             trajectoriser.Process( input_take, TrajectorizerOption.ReconstructAndAutoLabel ); // Do the job
             input_take.Save(); // Just in case.
 
 
-            // Solve
+            // Solve and save
             input_take.Solve();
             input_take.Save();
 
 
-            // This is our CSVExporter object, as per the API reference manual.
-            var csv_exporter = new CSVExporter();
-
-
-            /*
-             * Here, we set our CSV exporter's preferences.
-             * I adjusted this for our lab. Your preferences might be different, adjust them as needed.
-             */
-
-            csv_exporter.Units = LengthUnits.Units_Millimeters; // We use milimeters in our stuff.
-            csv_exporter.WriteHeader = true; // Add header to the csv file. This is a bit of a headache because of the stuff inside it, but, meh.
-            csv_exporter.WriteMarkers = false; // Add marker data to the csv file.
-            csv_exporter.WriteRigidBodies = true; // We use a ton of rigid bodies, we need these.
-            csv_exporter.WriteRigidBodyMarkers = false; // Just in case.
-            csv_exporter.RotationType = rotation_format; // As specified by the input argument.
-
-
-            // Now do the actual exporting
+            // Now do the actual exporting with the configured csv_exporter
             Result export_result = csv_exporter.Export(input_take, csv_file_name, true);
             if(!export_result.Success)
             {
@@ -168,6 +242,7 @@ namespace OptiTrack_NMotive_Converter
             Console.WriteLine("4\tEuler, YZX");
             Console.WriteLine("5\tEuler, ZXY");
             Console.WriteLine("6\tEuler, ZYX");
+            Console.WriteLine("This option will override whatever you specify in CSVExporterSettings.motive.");
         }
     }
 }

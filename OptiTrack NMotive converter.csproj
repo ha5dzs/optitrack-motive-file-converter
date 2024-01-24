@@ -5,6 +5,7 @@
     <TargetFramework>net7.0</TargetFramework>
      <PlatformTarget>x64</PlatformTarget>
     <RootNamespace>OptiTrack_NMotive_Converter</RootNamespace>
+     <AssemblyName>converter</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
       <Reference Include="NMotive">
@@ -17,4 +18,11 @@
       <TargetPath>platforms\%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>
     </ContentWithTargetPath>
   </ItemGroup>
+  <ItemGroup>
+    <ContentWithTargetPath Include="ReconstructionSettings.motive">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>%(Filename)%(Extension)</TargetPath>
+    </ContentWithTargetPath>
+</ItemGroup>
+
 </Project>
