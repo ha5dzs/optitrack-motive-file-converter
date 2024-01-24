@@ -33,7 +33,7 @@ This code is written to be called programmatically, and I made it as simple as p
 converter.exe <path_to_take_file> <path_to_csv_file> <OPTIONAL: rotation_format>
 ```
 
-This code creates the .csv file at `path_to_csv_file`, by reading `path_to_take_file`. The default output format is quaternions, but if you want Euler angles and with different rotation orders, you can do this too, by simply adding a number as an extra input argument. This number is interpreted as:
+This code creates the .csv file at `path_to_csv_file`, by reading `path_to_take_file`. The default output format is quaternions. You can change this by editing `CSVExporterSettings.motive`. If you want Euler angles and with different rotation orders for each file you process, you can simply add a number as an extra input argument. This number is interpreted as:
 
 rotation_format  Format and rotation order
  * 0: Quaternion, `w-x-y-z` (`w-i-j-k`)
