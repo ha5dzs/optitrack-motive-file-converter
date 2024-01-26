@@ -1,6 +1,6 @@
 # OptiTrack Motive file converter
 
-**(For the tl;dr types, download the executable [here](https://github.com/ha5dzs/optitrack-motive-file-converter/releases/tag/4.0).)**
+**(For the tl;dr types, download the executable [here](https://github.com/ha5dzs/optitrack-motive-file-converter/releases/tag/4.1).)**
 
 Sometimes in my experiments I don't just need to stream OptiTrack data [using the NatNet SDK](https://optitrack.com/software/natnet-sdk/), but also I need access to the entire trial, which I recorded as *take* files.
 
@@ -82,7 +82,9 @@ dotnet run <path_to_take_file> <path_to_csv_file>
 
 ### The config files
 
-There are now two config files. The first one is `ReconstructionSettings.motive` in XML syntax, and this file is the same as the one bundled with the batch processor. Without knowing the internal workings of how Motive processes the camera data, these don't really mean much to the end user.
+There are now two config files. Both of them are placed in the same directory where the exectuable is. The code finds the absolute paths itself, so you don't have to specify anything.
+
+The first one is `ReconstructionSettings.motive` in XML syntax, and this file is the same as the one bundled with the batch processor. Without knowing the internal workings of how Motive processes the camera data, these don't really mean much to the end user.
 
 The other config file is `CSVExporterSettings.motive`, which also in XML syntax, and is created by serialising and exporting the CSVExporter object. The code reads this file and updates `csv_exporter` accordingly. If you delete the file, the code will create a default one. If you add something crazy or just make a typo, the code will fail to load. There will be an error message, but since it's coming from the exception management directly, it may be cryptic. Then, just delete the file, and start over.
 
