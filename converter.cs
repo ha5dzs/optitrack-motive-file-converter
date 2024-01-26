@@ -41,12 +41,23 @@ namespace OptiTrack_NMotive_Converter
                 * Unfortunately, we have no option, but to load it in from a file.
                 */
 
+            // This file is in the executable's path. C# doesn't take this into account, so I need to create an absolute path
 
-            NMotive.Result import_result = Settings.ImportMotiveProfile( "ReconstructionSettings.motive" );
+            // Thanks to: https://stackoverflow.com/questions/3991933/get-path-for-my-exe
+            var executable_path = AppDomain.CurrentDomain.BaseDirectory;
+
+            //Console.WriteLine(executable_path);
+
+            var reconstruction_settings_file_name = "ReconstructionSettings.motive";
+
+            var reconstruction_settings_file_path = executable_path + reconstruction_settings_file_name;
+
+
+            NMotive.Result import_result = Settings.ImportMotiveProfile( reconstruction_settings_file_path );
 
             if ( !import_result.Success )
             {
-                Console.WriteLine("Couldn't import the reconstruction settings file {0}", "ReconstructionSettings.motive");
+                Console.WriteLine("Couldn't import the reconstruction settings file {0}", reconstruction_settings_file_path);
                 return -1; // No point in continuing, if the reconstruction settings file couldn't be loaded.
             }
 
@@ -58,6 +69,10 @@ namespace OptiTrack_NMotive_Converter
                 * If there is a problem with the csv exporter config file, this will create it with these defaults.
                 */
 
+            var csv_exporter_settings_file_name = "CSVExporterSettings.motive";
+
+            var csv_exporter_settings_file_path = executable_path + csv_exporter_settings_file_name;
+
             csv_exporter.RotationType = Rotation.QuaternionFormat; // Rotation is quaternion. More complicated, but less messy than Euler angles.
             csv_exporter.Units = LengthUnits.Units_Millimeters; // We use mm in the lab.
             csv_exporter.UseWorldSapceCoordinates = true; // This will matter when VR is used.
@@ -67,7 +82,7 @@ namespace OptiTrack_NMotive_Converter
             csv_exporter.WriteRigidBodies = true; // We use a ton of rigid bodies, we need these.
             csv_exporter.WriteRigidBodyMarkers = false; // Just in case.
 
-            if(!File.Exists("CSVExporterSettings.motive"))
+            if(!File.Exists(csv_exporter_settings_file_path))
             {
                 // If we got here, we need to export the CSV settings into an xml file
                 // 'inspired' by: https://stackoverflow.com/questions/4123590/serialize-an-object-to-xml
@@ -84,7 +99,7 @@ namespace OptiTrack_NMotive_Converter
                     Console.WriteLine("No CSV Exporter configuration file is found, creating a default one.");
                     //Console.WriteLine(string_writer.ToString());
                     string output_string = string_writer.ToString();
-                    File.WriteAllTextAsync("CSVExporterSettings.motive", output_string);
+                    File.WriteAllTextAsync(csv_exporter_settings_file_path, output_string);
                 }
 
 
@@ -95,7 +110,7 @@ namespace OptiTrack_NMotive_Converter
                 //Console.WriteLine("CSV exporter config file found.");
                 try
                 {
-                    using (var reader = new StreamReader("CSVExporterSettings.motive"))
+                    using (var reader = new StreamReader(csv_exporter_settings_file_path))
                     {
                         csv_exporter = (CSVExporter) new XmlSerializer(typeof(CSVExporter)).Deserialize(reader);
                     }
