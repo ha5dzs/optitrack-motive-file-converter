@@ -135,4 +135,4 @@ Yes, Matlab is OK with forward slashes in the path, instead of backslashes. Also
 
 There is an included Matlab file. You just need to specify where the executable is, which directory the `.tak` files are in, and which directory the `.csv` files should go. Then it starts a parallel pool, and executes the binary.
 
-Processing 180 trials in Motive takes about 3 hours. Doing the same processing steps with this code takes about 4 minutes on the decent workstation in the lab.
+Processing 180 trials in Motive takes about 3-4 hours. Doing the same processing steps with this code takes about 45 minutes on the decent workstation in the lab, depending on how you set the config files.
