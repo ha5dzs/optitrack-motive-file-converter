@@ -12,7 +12,7 @@ With Motive 3, it seems that the rigid body data is not included by default. In 
 
 The only problems with this are that this process is really slow, Motive Batch Processor requires a license, and it seems that is single-core execution only.
 
-So, this new version of code has been brought up-to-date: It now requies .NET framework 7.0, and does all the additional steps (Reconstruct, Auto-label, Solve) before exporting to CSV.
+So, this new version of code has been brought up-to-date: It now requires .NET framework 7.0, and does all the additional steps (Reconstruct, Auto-label, Solve) before exporting to CSV.
 
 Additionally, it seems that a lot of binaries have been updated, and `NMotive.dll` didn't load due to some undocumented dependencies. So I ended up senselessly copying everything in the project until it worked.
 
@@ -86,7 +86,7 @@ There are now two config files. The first one is `ReconstructionSettings.motive`
 
 The other config file is `CSVExporterSettings.motive`, which also in XML syntax, and is created by serialising and exporting the CSVExporter object. The code reads this file and updates `csv_exporter` accordingly. If you delete the file, the code will create a default one. If you add something crazy or just make a typo, the code will fail to load. There will be an error message, but since it's coming from the exception management directly, it may be cryptic. Then, just delete the file, and start over.
 
-Note that since this is going into the C# code directly, all variable types MUST have the same name as if you wrote C# code. For example, the `<Units>` tag is not just 'millimetres', but `Units_Millimeters`, because this is how it was defined in `NMotive.LengthUnits`. As this is an enumeration, you could use a number instread.
+Note that since this is going into the C# code directly, all variable types MUST have the same name as if you wrote C# code. For example, the `<Units>` tag is not just 'millimetres', but `Units_Millimeters`, because this is how it was defined in `NMotive.LengthUnits`. As this is an enumeration, you could use a number instead.
 
 The options `true` or `false` may look straightforward, but they are case sensitive.
 
