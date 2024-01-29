@@ -1,6 +1,6 @@
 # OptiTrack Motive file converter
 
-**(For the tl;dr types, download the executable [here](https://github.com/ha5dzs/optitrack-motive-file-converter/releases/tag/4.1).)**
+**(For the tl;dr types, download the executable [here](https://github.com/ha5dzs/optitrack-motive-file-converter/releases/tag/4.2).)**
 
 Sometimes in my experiments I don't just need to stream OptiTrack data [using the NatNet SDK](https://optitrack.com/software/natnet-sdk/), but also I need access to the entire trial, which I recorded as *take* files.
 
