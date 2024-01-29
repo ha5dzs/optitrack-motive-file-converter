@@ -216,8 +216,15 @@ namespace OptiTrack_NMotive_Converter
 
             // Reconstruct and auto-label. Motive 3 has some quick rigid body solver, which doesn't always work with complicated objects.
 
-
-            trajectoriser.Process( input_take, TrajectorizerOption.ReconstructAndAutoLabel ); // Do the job
+            try
+            {
+                trajectoriser.Process( input_take, TrajectorizerOption.ReconstructAndAutoLabel ); // Do the job
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Processing the .tak file failed: {0}", e.Message);
+                return -1;
+            }
             input_take.Save(); // Just in case.
 
 
