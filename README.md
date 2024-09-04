@@ -20,7 +20,7 @@ Additionally, it seems that a lot of binaries have been updated, and `NMotive.dl
 
 Motive allows you to manually export these files as .csv, but the tool is either part in Motive, or you can use the [batch processor](https://v23.wiki.optitrack.com/index.php?title=Motive_Batch_Processor) to get a bunch of files processed.
 
-Neither of these solutions allowed me to do the conversion programmatically, or allow me to use a separate computer that does not run Motive to process my data.
+Neither of these solutions allowed me to do the conversion programmatically, or allowed me to use a separate computer that does not run Motive to process my data.
 
 Luckily, the source code is included for the batch processor, and mere mortals like me are 'welcome to use as a starting point' for a custom application.
 
