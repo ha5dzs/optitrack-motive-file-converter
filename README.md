@@ -1,6 +1,6 @@
 # OptiTrack Motive file converter
 
-**(For the tl;dr types, download the executable [here](https://github.com/ha5dzs/optitrack-motive-file-converter/releases/tag/4.2).)**
+**(For the tl;dr types, download the executable [here](https://github.com/ha5dzs/optitrack-motive-file-converter/releases/tag/5.0).)**
 
 Sometimes in my experiments I don't just need to stream OptiTrack data [using the NatNet SDK](https://optitrack.com/software/natnet-sdk/), but also I need access to the entire trial, which I recorded as *take* files.
 
@@ -8,7 +8,7 @@ Unfortunately these files contain binary data, and I have not been able to find 
 
 ## Motive 3 differences
 
-With Motive 3, it seems that the rigid body data is not included by default. In research, we almost exclusively use rigid bodies, as we need to rely on virtual markers. In Motive terminology, we set the 'pivot' (or as of Motive 3.1, a 'Bone') to a marker that doesn't exist on the rigid body during normal use. Presumably (as, in, this is all speculation), in order to increase performance, the rigid body solver is a quick and less accurate one for when handling the data. When there are multiple rigid bodies that are similar to each other, this algorithm gets easily confused. When the files are reconstructed, auto-labelled, and then solved, this problem disappears.
+With Motive 3, it seems that the rigid body data is not included by default. In research, we almost exclusively use rigid bodies, as we need to rely on virtual markers. In Motive terminology, we set the 'pivot' (or as of Motive 3.1 or so, a 'Bone') to a marker that doesn't exist on the rigid body during normal use. Presumably (as, in, this is all speculation), in order to increase performance, the rigid body solver is a quick and less accurate one for when handling the data. When there are multiple rigid bodies that are similar to each other, this algorithm gets easily confused. When the files are reconstructed, auto-labelled, and then solved, this problem disappears.
 
 The only problem with this are that this process is really slow, Motive Batch Processor requires a license, and it seems that is single-core execution only.
 
