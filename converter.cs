@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using NMotive;
 using System.Xml;
 using System.Xml.Serialization;
@@ -17,7 +18,6 @@ namespace OptiTrack_NMotive_Converter
         * Since I won't do anything with Qt GUIs in this code, I can afford not to care.
         */
         [STAThread]
-
 
         static int Main(string[] args)
         {
@@ -189,7 +189,12 @@ namespace OptiTrack_NMotive_Converter
 
 
             // Some sanity check on the input arguments. Paths to files should be either absolute, or relative to the executable.
-            // I know it's like giving a hand grenade to a monkey, but since this thing is to be called programmatically, I can live with it.
+
+            /*
+             * I know it's like giving a hand grenade to a monkey, but since this thing is to be called programmatically, I can live with it.
+             */
+
+
 
             // Load our take, and let the user know if the take failed to load
             Take input_take = null; // Just in case, clear this poor thing.
@@ -202,6 +207,7 @@ namespace OptiTrack_NMotive_Converter
                 catch
                 {
                     Console.WriteLine("Input .TAK file {0} could not be opened.", take_file_name);
+                    return -1;
                 }
             }
             catch (NMotiveException nmotive_exception)
@@ -237,7 +243,7 @@ namespace OptiTrack_NMotive_Converter
             Result export_result = csv_exporter.Export(input_take, csv_file_name, true);
             if(!export_result.Success)
             {
-                // I like how these people throught of error management.
+                // I like how these people thought of error management.
                 Console.WriteLine("Error exporting the take.");
                 Console.WriteLine("NMotive API says: {0}", export_result.Message);
                 return -1;

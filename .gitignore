@@ -1,5 +1,9 @@
 # Stuff to ignore
 .vscode
+.vs
 *.sln
 bin
 obj
+.v2
+.vsidx
+.suo
