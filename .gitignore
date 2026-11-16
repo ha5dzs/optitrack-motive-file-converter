@@ -7,3 +7,6 @@ obj
 .v2
 .vsidx
 .suo
+# NMotive API binary DLLs are distributed via the GitHub release, not stored in the repo
+NMotive API/*.dll
+NMotive API/platforms/*.dll

@@ -1,22 +1,16 @@
 # OptiTrack Motive file converter
 
-**(For the tl;dr types, download the executable [here](https://github.com/ha5dzs/optitrack-motive-file-converter/releases/tag/5.0).)**
+UPDATE 16/11/2026: Files over 100 MB apparently cannot be uploaded to GitHub. I removed them here, but they are still included in the latest release. If you want to build this project, just use the DLL files from the release.
+
+**(For the tl;dr types, download the executable [here](https://github.com/ha5dzs/optitrack-motive-file-converter/releases/tag/7.0).)**
 
 Sometimes in my experiments I don't just need to stream OptiTrack data [using the NatNet SDK](https://optitrack.com/software/natnet-sdk/), but also I need access to the entire trial, which I recorded as *take* files.
 
 Unfortunately these files contain binary data, and I have not been able to find a file format description online. I need them in an easily accessible file format, so I can do statistics on the motion tracker data later on.
 
-## Motive 3 differences
-
-With Motive 3, it seems that the rigid body data is not included by default. In research, we almost exclusively use rigid bodies, as we need to rely on virtual markers. In Motive terminology, we set the 'pivot' (or as of Motive 3.1 or so, a 'Bone') to a marker that doesn't exist on the rigid body during normal use. Presumably (as, in, this is all speculation), in order to increase performance, the rigid body solver is a quick and less accurate one for when handling the data. When there are multiple rigid bodies that are similar to each other, this algorithm gets easily confused. When the files are reconstructed, auto-labelled, and then solved, this problem disappears.
-
-The only problem with this are that this process is really slow, Motive Batch Processor requires a license, and it seems that is single-core execution only.
-
-So, this new version of code has been brought up-to-date: It now requires .NET framework 9.0, and does all the additional steps (Reconstruct, Auto-label, Solve) before exporting to CSV.
-
-Additionally, it seems that a lot of binaries have been updated, and `NMotive.dll` didn't load due to some undocumented dependencies. So I ended up senselessly copying everything in the project until it worked.
-
 ## Why
+
+With Motive 3.5 released, we don't really use this any more, because it seems to process the files faster. Just in case if anyone uses it, it is now including the latest (as of November 2026) version of the DLL files, and compiles with dotnet 10.
 
 Motive allows you to manually export these files as .csv, but the tool is either part in Motive, or you can use the [batch processor](https://v23.wiki.optitrack.com/index.php?title=Motive_Batch_Processor) to get a bunch of files processed.
 
